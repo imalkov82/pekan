@@ -1,87 +1,41 @@
 __author__ = 'imalkov'
 
-import logging
-import pprint
-import timeit
-import time
+import os, sys
 
-class ModelLogger:
-    def __init__(self, driver, log_name):
-        self._driver = driver
-        # log_name = '{0}/log_{1}.txt'.format(os.environ['HOME'], os.getpid())
-        print('ModelLogger - log file: {0}'.format(log_name))
-        logging.basicConfig(filename=log_name,level=logging.DEBUG)
-        # logging.basicConfig(filename=sys.stdout,level=logging.DEBUG)
-        self._logger = logging.getLogger('Model Logger')
+def prepare_to_parse(path):
+    res = []
+    with open(path) as file:
+        lines = file.readlines()
+        res = [(line.lstrip()).replace('\n','') for line in lines]
+        res = filter(lambda line: False if (len(line) == 0 or line[0] in ['$', '\n']) else True, res)
+        res = [line.split('$')[0].strip() for line in res]
+    return res
 
+def runcmd(cmd, execdir, short_name = ''):
+    pdir = os.getcwd()
+    os.chdir(execdir)
+    sys.stdout.flush()
+    proc = os.popen(cmd)
+    s ='---------------------------------- \nhome: {0} --> {1}\ncmd: {2} ' \
+       '\n----------------------------------'.format(execdir, short_name, cmd)
 
-class EnvLogger(ModelLogger):
-    def __init__(self, driver, log_name):
-        super.__init__(driver, log_name)
-
-    def __call__(self, *args, **kwargs):
-        pass
-
-class ExecLogger(ModelLogger):
-    model_state_dict = {
-        0: 'init_state',
-        1: 'pec_props_state',
-        2: 'by_tasks_state',
-        3: 'pool_exe_state',
-        4: 'exec_complete_state',
-        5: 'app_complete_state'}
-
-    def __init__(self, driver, log_name):
-        super().__init__(driver, log_name)
-
-    def init_state(self):
-        self._logger.info('Model Executor state: INIT ')
-        s = ''
-        s += '\n\tmax pool size = {0}'.format(self._driver.max_pool_size)
-        s += '\n\tmodel = {0}'.format(self._driver.pec_model)
-        self._logger.info(s)
-
-    def pec_props_state(self):
-        self._logger.info('Model Executor state: PEC_PROPS')
-        s = ''
-        s += 'working list:\n\t'
-        s += '\n\t'.join(self._driver.wrk_list)
-        self._logger.info(s)
-
-    def by_tasks_state(self):
-        self._logger.info('Model Executor state: BY_TASKS')
-        s = ''
-        s = '\n{0}'.format(pprint.pformat(self._driver.bytask_list))
-        self._logger.info(s)
-
-    def pool_exe_state(self):
-        self._logger.info('Model Executor state: POOL_EXE')
-        s = ''
-        s += 'EXECUTING POOL:\n\t{0}'.format('\n\t'.join(self._driver._sub_array))
-        s += '\n\tDATE_TIME: {0}'.format(time.strftime("%x"))
-        self.exec_start_time = timeit.default_timer()
-        self._logger.info(s)
-
-    def exec_complete_state(self):
-        self._logger.info('Model Executor state: EXEC_COMPLETE')
-        s = ''
-        s += '\nfinished in {0} sec'.format(int(timeit.default_timer() - self.exec_start_time))
-        self._logger.info(s)
-
-    def app_complete_state(self):
-        # self._logger.info('Model Executor state: APP_COMPLETE')
-        if self._driver.dry_run is True:
-            s = 'DRY RUN'
+    print(s)
+    while True:
+        line = proc.readline()
+        if line != '':
+            s += line.strip()
+            sys.stdout.flush()
+            print('{0} : {1}'.format(short_name,line.strip()))
         else:
-            s = 'MODEL RUN'
-        self._logger.info('^^^^^^^^^^^^ {0} EXECUTION COMPLETED ^^^^^^^^^^^^^^^^^ '.format(s))
+            break
+    status = proc.close()
+    print('ended with status: {0}'.format(status))
+    s += 'ended with status: {0}'.format(status)
+    os.chdir(pdir)
+    return s
 
-    def __call__(self):
-        getattr(self, ExecLogger.model_state_dict[self._driver._state])()
-
-class AnalysisLogger:
-    def __init__(self, driver):
-        super.__init__(driver)
-
-    def __call__(self, *args, **kwargs):
-        pass
+def session_naming(path, depth):
+    local_path = os.path.abspath(path)
+    names_list = str.rsplit(local_path, os.path.sep,depth)[-1 * depth:]
+    name = '{0}{1}'.format(names_list[0].replace('NODE','n'), names_list[1].replace('Session', 's'))
+    return name

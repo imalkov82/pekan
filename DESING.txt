@@ -2,6 +2,9 @@ Pecube Execute Analyse preseNt - PEcAN
 
 pekan.conf:
 1. will contain all categories related to the state machine (execution, convert, analyze/statistics, display)
+2. will generate proper pickle file for every state using pekan.conf
+3. habitat state will use peconf.csv file for execution and will write all the success and fail of env creation to the log
+   than, punter file will execute the peconf.csv file
 --------------------------------------------
 --------------------------------------------
 ++ pekan.py
@@ -34,6 +37,7 @@ pekan.conf:
     (d) create, clear or back up existing files (new flag)
     (e) contain topo_params & fault_params, will generate files from base file
         and will override base with topo_diff.conf/fault_diff.conf (or some other method ...)
+    (f) will load HabitatContext from pickle file that was saved by
 --------------------------------------------
 ++ punter.py (PecUbe Numerous ExecutoR) module:
 --------------------------------------------
@@ -43,7 +47,10 @@ pekan.conf:
 2. good logging with strong logging protocol
 
 
-
-
-
-
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+states only (no cmd execution of states)
+context of main state will be the Defaults context with logging configurations
+every other state will have his own context from it's conf file section
