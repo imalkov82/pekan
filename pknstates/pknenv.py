@@ -9,8 +9,8 @@ import numpy
 sys.path.append(os.getcwd())
 from mdltools.mdlcontext import HabitatContext
 from mdltools import gridstrategy
-from modelinput.faultrule import FaultInput
-from modelinput.toporule import TopoInput
+from mdltools.faultrule import FaultInput
+from mdltools.toporule import TopoInput
 from mdltools.execrefine import runcmd
 
 
