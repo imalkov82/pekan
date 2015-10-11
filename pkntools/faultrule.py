@@ -1,6 +1,6 @@
 __author__ = 'imalkov'
 
-from pkntools.execrefine import prepare_to_parse
+from pkntools.mdlrefine import prepare_to_parse
 import numpy
 
 class FaultInput:

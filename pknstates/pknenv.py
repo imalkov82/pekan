@@ -11,7 +11,7 @@ from pkntools.mdlcontext import HabitatContext
 from pkntools import gridstrategy
 from pkntools.faultrule import FaultInput
 from pkntools.toporule import TopoInput
-from pkntools.execrefine import runcmd
+from pkntools.mdlrefine import runcmd
 
 
 class EnvNode:

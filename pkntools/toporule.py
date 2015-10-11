@@ -2,7 +2,7 @@ __author__ = 'imalkov'
 
 import os, sys
 sys.path.append(os.getcwd())
-from pkntools.execrefine import prepare_to_parse
+from pkntools.mdlrefine import prepare_to_parse
 
 
 
