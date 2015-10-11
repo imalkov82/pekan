@@ -1,6 +1,6 @@
 __author__ = 'imalkov'
 
-from mdltools.mdlcontext import *
+from pkntools.mdlcontext import *
 import pknstates
 from configparser import ConfigParser
 from argparse import ArgumentParser

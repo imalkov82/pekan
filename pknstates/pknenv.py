@@ -7,11 +7,11 @@ import os
 import sys
 import numpy
 sys.path.append(os.getcwd())
-from mdltools.mdlcontext import HabitatContext
-from mdltools import gridstrategy
-from mdltools.faultrule import FaultInput
-from mdltools.toporule import TopoInput
-from mdltools.execrefine import runcmd
+from pkntools.mdlcontext import HabitatContext
+from pkntools import gridstrategy
+from pkntools.faultrule import FaultInput
+from pkntools.toporule import TopoInput
+from pkntools.execrefine import runcmd
 
 
 class EnvNode:
