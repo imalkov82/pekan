@@ -29,6 +29,27 @@ class ModelContext:
     def confkls(self, val):
         self._confobj = val
 
+class DispContext(ModelContext):
+    def __init__(self):
+        super().__init__()
+
+    @property
+    def worklist(self):
+        work_data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=['execution_directory'])
+        work_data['execution_directory'] = work_data['execution_directory'].apply(lambda x: x.replace('~', os.environ['HOME']))
+        return [p for i, p in work_data['execution_directory'].iteritems()]
+
+class StatsContext(ModelContext):
+    def __init__(self):
+        super().__init__()
+
+    @property
+    def data(self):
+        data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=['execution_directory', 'grid_type', 'stat'])
+        work_data = data[data['stat'] == 1]
+        work_data['execution_directory'] = work_data['execution_directory'].apply(lambda x: x.replace('~', os.environ['HOME']))
+        return work_data.drop('env', axis=1)
+        
 class HabitatContext(ModelContext):
     def __init__(self):
         super().__init__()
