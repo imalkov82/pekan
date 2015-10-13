@@ -32,7 +32,6 @@ class ModelContext:
 class HabitatContext(ModelContext):
     def __init__(self):
         super().__init__()
-        self.executor = None
 
     @property
     def data(self):
