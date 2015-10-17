@@ -4,20 +4,24 @@ import os
 import sys
 sys.path.append(os.getcwd())
 from pkntools.mdlcontext import StatsContext
+from pkntools.strategy import statstrategy
 import pknstates
 
 
-def genstat(s, context, pknlogger):
-    pass
+
+def genstat(s, context, logger):
+    grid = getattr(statstrategy, PknStats.gridtype[int(s['grid_type'])])
+    grid.make_stats(s['execution_dir'], context, logger)
 
 class PknStats:
+    gridtype = {0: 'PlatoStats',
+                1: 'CanyonStats'}
     def __init__(self):
         self.stats_cnxt = StatsContext()
 
     def process(self, remaining_arr, pkn_sm):
         self.stats_cnxt.update(pkn_sm.context)
         self.stats_cnxt.update(dict(pkn_sm.context.confkls['Statistics']))
-        # self.hbtcnxt.data.apply(genenv, args=(self.hbtcnxt, pkn_sm.logger, ), axis=1)
         self.stats_cnxt.data.apply(genstat, args=(self.stats_cnxt, pkn_sm.logger, ), axis=1)
         # execute code
         try:

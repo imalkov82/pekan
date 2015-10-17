@@ -12,8 +12,12 @@ class PekanSM:
     def __init__(self):
         self.state = None
         self.context = ModelContext()
-        self.states_rank = {'env': 0, 'run': 1, 'stat': 2, 'display': 3}
-        self.states_obj = {'env': 'PknEnv', 'run': 'PknExec', 'stat': 'PknStats', 'display': 'PknDisplay'}
+        self.states_rank = {'env': 0, 'run': 1, 'convert': 2, 'stat': 3, 'display': 4}
+        self.states_obj = {'env': 'PknEnv',
+                           'run': 'PknExec',
+                           'convert': 'PknConvert',
+                           'stat':'PknStats',
+                           'display': 'PknDisplay'}
 
     def process(self, remaining_list):
         remaining = self.state.process(remaining_list, self)
@@ -36,10 +40,25 @@ class PekanSM:
     def _set_logger(self, home_dir):
         if not os.path.exists(home_dir):
             os.mkdir(home_dir)
-        log_name = os.path.join(home_dir,'pekan_{0}.log'.format(os.getpid()))
-        logging.basicConfig(filename=log_name,level=logging.DEBUG)
+        # log_name = os.path.join(home_dir,'pekan_{0}.log'.format(os.getpid()))
+        # logging.basicConfig(filename=log_name,level=logging.DEBUG)
         # logging.basicConfig(filename=sys.stdout, level=logging.DEBUG)
-        return logging.getLogger('PEKAN')
+        logger = logging.getLogger('pekan')
+        logger.setLevel(logging.DEBUG)
+        # create file handler which logs even debug messages
+        fh = logging.FileHandler(os.path.join(home_dir,'pekan_{0}.log'.format(os.getpid())))
+        fh.setLevel(logging.DEBUG)
+        # create console handler with a higher log level
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.ERROR)
+        # create formatter and add it to the handlers
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        fh.setFormatter(formatter)
+        ch.setFormatter(formatter)
+        # add the handlers to the logger
+        logger.addHandler(fh)
+        logger.addHandler(ch)
+        return logger
 
     def start(self, states_list, config_file):
         self.state, sl = self._set_state(states_list)

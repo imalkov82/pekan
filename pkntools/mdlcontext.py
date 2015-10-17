@@ -29,6 +29,10 @@ class ModelContext:
     def confkls(self, val):
         self._confobj = val
 
+class ConvertContext(ModelContext):
+    def __init__(self):
+        super().__init__()
+
 class DispContext(ModelContext):
     def __init__(self):
         super().__init__()

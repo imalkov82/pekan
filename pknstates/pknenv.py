@@ -8,7 +8,7 @@ import sys
 import numpy
 sys.path.append(os.getcwd())
 from pkntools.mdlcontext import HabitatContext
-from pkntools import gridstrategy
+from pkntools.strategy import gridstrategy
 from pkntools.faultrule import FaultInput
 from pkntools.toporule import TopoInput
 from pkntools.mdlrefine import runcmd
@@ -102,10 +102,13 @@ class PknEnv:
     def __init__(self):
         self.hbtcnxt = HabitatContext()
 
+    def generate(self, s, context, logger):
+        print('generate')
+
     def process(self, remaining_arr, pkn_sm):
         self.hbtcnxt.update(pkn_sm.context)
         self.hbtcnxt.update(dict(pkn_sm.context.confkls['Environment']))
-        self.hbtcnxt.data.apply(genenv, args=(self.hbtcnxt,), axis=1)
+        self.hbtcnxt.data.apply(self.generate, args=(self.hbtcnxt, pkn_sm.logger, ), axis=1)
         try:
             pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
         except:
