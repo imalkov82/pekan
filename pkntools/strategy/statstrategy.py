@@ -1,37 +1,68 @@
 __author__ = 'imalkov'
 import re
 import os
+import pandas as pnd
+from pkntools.strategy import statstrategy
 
-class ThermoProcessor:
-    def __init__(self):
-        pass
+class PropsProcessor:
+    def __init__(self, metrica, metvals):
+        self.metvals = metvals
+        self.metrica = metrica
+        self.extension = 'csv'
 
-class AgeElvProcessor:
-    def __init__(self):
-        pass
+    def collect(self, path):
+        self.mtrx_dict = {}
+        r = re.compile('{0}\d.{1}'.format(self.metrica, self.extension))
+        for root, dirs, files in os.listdir(path):
+            return sorted([os.path.join(root,x) for x in files if r.match(x)])
+
+class AgeElevationProcessor(PropsProcessor):
+    def __init__(self, metrica, metvals):
+        super().__init__(metrica, metvals)
+
+    def __call__(self, path):
+        self.collect(path)
+        for k, v in self.mtrx_dict.items():
+            for f in v:
+                df = pnd.read_csv(f, header = 0, usecols=['ExhumationRate', 'ApatiteHeAge', 'Points:2', 'arc_length'])
+
+class TemperatureProcessor(PropsProcessor):
+    def __init__(self, metrica, metvals):
+        super().__init__(metrica, metvals)
 
 class PlatoStats:
-    def __init__(self, dir_name):
-        self.ae_pross = AgeElvProcessor()
-        self.t_pross = ThermoProcessor()
-        self.dir_name = dir_name
+    '''
+    metrics to be extracred:
+        1. denudation rate
+            a. expected (from fault_input.txt, topo_input.txt)
+            b. model (Age-Elevation.csv)
+            c. diff in %
+        2. exhumation rate (escarpment)
+            a. expected (from fault_input.txt, topo_input.txt)
+            b. model (Age-Elevation.csv)
+            c. diff in %
+        3. isotherma depth (footwall)
+            a.
+            '''
 
-    def make_stats(self, csv_path, context, logger):
-        if not os.path.exists(csv_path):
+    def __init__(self, context, logger):
+        self.context = context
+        self.logger = logger
+        self.types = {'Age-Elevation': 'AgeElevationProcessor', 'Temperature': 'TemperatureProcessor'}
+
+    def make_stats(self, path):
+        if not os.path.exists(path):
             return False
 
-        plato_path = os.path.join(csv_path, self.dir_name)
-        if not os.path.exists(plato_path):
-            return False
+        for metobj in [getattr(statstrategy, self.types[key])(key, val) for key, val in self.context.metrics.items()]:
+            metobj(path)
 
-        
         return True
 
 
 class CanyonStats:
     def __init__(self):
-        self.ae_pross = AgeElvProcessor()
-        self.t_pross = ThermoProcessor()
+        pass
 
     def make_stats(self, scr_path, context, logger):
         pass

@@ -1,6 +1,7 @@
 __author__ = 'imalkov'
 
 import os
+import ast
 import pandas as pnd
 from configparser import ConfigParser
 
@@ -46,6 +47,14 @@ class DispContext(ModelContext):
 class StatsContext(ModelContext):
     def __init__(self):
         super().__init__()
+
+    def metrics(self):
+        if 'metrics' not in self._context:
+            raise ValueError('metrics not in configuration')
+        res = {}
+        for k,v in ast.literal_eval(self._context['metrics']).items():
+            res[k] = ast.literal_eval(v)
+        return res
 
     @property
     def data(self):

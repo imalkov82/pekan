@@ -5,26 +5,15 @@ import sys
 sys.path.append(os.getcwd())
 from pkntools.mdlcontext import StatsContext
 from pkntools.strategy import statstrategy
-import pknstates
+from pknstates.pkngeneric import PknGeneric
 
 
 
-def genstat(s, context, logger):
-    grid = getattr(statstrategy, PknStats.gridtype[int(s['grid_type'])])
-    grid.make_stats(s['execution_dir'], context, logger)
-
-class PknStats:
-    gridtype = {0: 'PlatoStats',
-                1: 'CanyonStats'}
+class PknStats(PknGeneric):
     def __init__(self):
-        self.stats_cnxt = StatsContext()
+        super().__init__(StatsContext(), 'Statistics')
+        self.gridtype = {0: 'PlatoStats', 1: 'CanyonStats'}
 
-    def process(self, remaining_arr, pkn_sm):
-        self.stats_cnxt.update(pkn_sm.context)
-        self.stats_cnxt.update(dict(pkn_sm.context.confkls['Statistics']))
-        self.stats_cnxt.data.apply(genstat, args=(self.stats_cnxt, pkn_sm.logger, ), axis=1)
-        # execute code
-        try:
-            pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
-        except:
-            pkn_sm.state = None
+    def generate(self, s, logger):
+        grid = getattr(statstrategy, self.gridtype[int(s['grid_type'])])(self.context, logger)
+        grid.make_stats(os.path.join(s['execution_dir'], 'stats'))

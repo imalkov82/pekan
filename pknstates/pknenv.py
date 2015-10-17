@@ -2,7 +2,6 @@ from builtins import float
 
 __author__ = 'imalkov'
 
-import pknstates
 import os
 import sys
 import numpy
@@ -12,7 +11,7 @@ from pkntools.strategy import gridstrategy
 from pkntools.faultrule import FaultInput
 from pkntools.toporule import TopoInput
 from pkntools.mdlrefine import runcmd
-
+from pknstates.pkngeneric import PknGeneric
 
 class EnvNode:
     def __init__(self, path):
@@ -98,18 +97,17 @@ def genenv(s, context):
     return senv()
 
 
-class PknEnv:
+class PknEnv(PknGeneric):
     def __init__(self):
-        self.hbtcnxt = HabitatContext()
+        super().__init__(HabitatContext(), 'Environment')
 
-    def generate(self, s, context, logger):
-        print('generate')
-
-    def process(self, remaining_arr, pkn_sm):
-        self.hbtcnxt.update(pkn_sm.context)
-        self.hbtcnxt.update(dict(pkn_sm.context.confkls['Environment']))
-        self.hbtcnxt.data.apply(self.generate, args=(self.hbtcnxt, pkn_sm.logger, ), axis=1)
-        try:
-            pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
-        except:
-            pkn_sm.state = None
+    def generate(self, s, logger):
+        senv = SessionEnv(s['execution_directory'])
+        senv.attach(InputNode(os.path.join(s['execution_directory'], 'input'),
+                           os.path.join(s['sample'], 'input'), self.context))
+        senv.attach(SrcNode(os.path.join(s['execution_directory'], 'bin'), self.context))
+        senv.attach(DataNode(os.path.join(s['execution_directory'], 'data'), s['dim'], s['steps'],
+                             s['grid_type'], self.context))
+        senv.attach(EnvNode(os.path.join(s['execution_directory'], 'peout')))
+        senv.attach(EnvNode(os.path.join(s['execution_directory'], 'VTK')))
+        return senv()
