@@ -1,7 +1,9 @@
 __author__ = 'imalkov'
 
-from pkntools.mdlrefine import prepare_to_parse
 import numpy
+
+from pkntools.mdlutils.mdlrefine import prepare_to_parse
+
 
 class FaultInput:
     def __init__(self, fpath):

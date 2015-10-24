@@ -6,11 +6,11 @@ import os
 import sys
 import numpy
 sys.path.append(os.getcwd())
-from pkntools.mdlcontext import HabitatContext
+from pkntools.mdlutils.mdlcontext import HabitatContext
 from pkntools.strategy import gridstrategy
-from pkntools.faultrule import FaultInput
-from pkntools.toporule import TopoInput
-from pkntools.mdlrefine import runcmd
+from pkntools.inputrules.faultrule import FaultInput
+from pkntools.inputrules.toporule import TopoInput
+from pkntools.mdlutils.mdlrefine import runcmd
 from pknstates.pkngeneric import PknGeneric
 
 class EnvNode:

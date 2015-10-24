@@ -12,8 +12,8 @@ import os
 import sys
 import multiprocessing
 sys.path.append(os.getcwd())
-from pkntools.mdlcontext import NumerExeContext
-from pkntools.mdlrefine import runcmd, session_naming
+from pkntools.mdlutils.mdlcontext import NumerExeContext
+from pkntools.mdlutils.mdlrefine import runcmd, session_naming
 import pknstates
 ################################################
 class PknExec:

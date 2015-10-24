@@ -1,8 +1,10 @@
 __author__ = 'imalkov'
 
-import os, sys
+import os
+import sys
+
 sys.path.append(os.getcwd())
-from pkntools.mdlrefine import prepare_to_parse
+from pkntools.mdlutils.mdlrefine import prepare_to_parse
 
 
 

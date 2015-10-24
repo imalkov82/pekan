@@ -2,11 +2,9 @@ __author__ = 'imalkov'
 import re
 import os
 import pandas as pnd
-from pkntools.strategy import statstrategy
 
 class PropsProcessor:
-    def __init__(self, metrica, metvals):
-        self.metvals = metvals
+    def __init__(self, metrica):
         self.metrica = metrica
         self.extension = 'csv'
 
@@ -17,22 +15,30 @@ class PropsProcessor:
             return sorted([os.path.join(root,x) for x in files if r.match(x)])
 
 class AgeElevationProcessor(PropsProcessor):
-    def __init__(self, metrica, metvals):
-        super().__init__(metrica, metvals)
+    def __init__(self, metrica):
+        super().__init__(metrica)
+        self.columns = ['ExhumationRate', 'ApatiteHeAge', 'Points:2', 'arc_length']
 
     def __call__(self, path):
         self.collect(path)
         for k, v in self.mtrx_dict.items():
             for f in v:
-                df = pnd.read_csv(f, header = 0, usecols=['ExhumationRate', 'ApatiteHeAge', 'Points:2', 'arc_length'])
+                df = pnd.read_csv(f, header = 0, usecols= self.columns)
 
 class TemperatureProcessor(PropsProcessor):
-    def __init__(self, metrica, metvals):
-        super().__init__(metrica, metvals)
+    def __init__(self, metrica):
+        super().__init__(metrica)
+        self.columns = ['velo:0', 'velo:1', 'velo:2', 'arc_length', 'Points:2']
 
-class PlatoStats:
+    def __call__(self, path):
+        self.collect(path)
+        for k, v in self.mtrx_dict.items():
+            for f in v:
+                df = pnd.read_csv(f, header = 0, usecols= self.columns)
+
+class EscarpmentStats:
     '''
-    metrics to be extracred:
+    metrics to be extracted:
         1. denudation rate
             a. expected (from fault_input.txt, topo_input.txt)
             b. model (Age-Elevation.csv)
@@ -44,7 +50,6 @@ class PlatoStats:
         3. isotherma depth (footwall)
             a.
             '''
-
     def __init__(self, context, logger):
         self.context = context
         self.logger = logger
@@ -53,10 +58,9 @@ class PlatoStats:
     def make_stats(self, path):
         if not os.path.exists(path):
             return False
-
-        for metobj in [getattr(statstrategy, self.types[key])(key, val) for key, val in self.context.metrics.items()]:
-            metobj(path)
-
+        #stats on Age-Elevation,
+        #stats on Temperature depth
+        #stats on corelative data
         return True
 
 

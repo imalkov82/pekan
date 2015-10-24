@@ -1,12 +1,14 @@
 __author__ = 'imalkov'
 
-from pkntools.mdlcontext import *
-import pknstates
 from configparser import ConfigParser
 from argparse import ArgumentParser
 import ast
-import os, sys
+import os
 import logging
+
+from pkntools.mdlutils.mdlcontext import *
+import pknstates
+
 
 class PekanSM:
     def __init__(self):
@@ -16,7 +18,7 @@ class PekanSM:
         self.states_obj = {'env': 'PknEnv',
                            'run': 'PknExec',
                            'convert': 'PknConvert',
-                           'stat':'PknStats',
+                           'stat': 'PknStats',
                            'display': 'PknDisplay'}
 
     def process(self, remaining_list):
@@ -28,7 +30,7 @@ class PekanSM:
 
     def _set_state(self, states_list):
         sl_kv = [(s, self.states_rank[s]) for s in set(states_list)]
-        sl = [s for s,r in sorted(sl_kv, key=lambda s: s[1])]
+        sl = [s for s, r in sorted(sl_kv, key=lambda s: s[1])]
         return getattr(pknstates, self.states_obj[sl.pop(0)])(), sl
 
     def _set_configs(self, config_file):
