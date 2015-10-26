@@ -6,7 +6,7 @@ from pknstates.pkngeneric import PknGeneric
 
 class PknConvert(PknGeneric):
     def __init__(self):
-        super().__init__(ConvertContext(), 'Convert')
+        PknGeneric.__init__(self, ConvertContext(), 'Convert')
 
     def generate(self, s, logger):
         pass

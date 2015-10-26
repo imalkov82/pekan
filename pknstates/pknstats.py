@@ -11,7 +11,7 @@ from pknstates.pkngeneric import PknGeneric
 
 class PknStats(PknGeneric):
     def __init__(self):
-        super().__init__(StatsContext(), 'Statistics')
+        PknGeneric.__init__(self, StatsContext(), 'Statistics')
         self.grid_type = {0: 'PlatoStats', 1: 'CanyonStats'}
 
     def generate(self, s, logger):

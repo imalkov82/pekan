@@ -1,4 +1,4 @@
-from builtins import float
+# from builtins import float
 
 __author__ = 'imalkov'
 
@@ -26,18 +26,15 @@ class EnvNode:
             os.mkdir(self.path)
         [node() for node in self._child_nodes]
 
-class SessionEnv(EnvNode):
-    def __init__(self, path):
-        super().__init__(path)
-
-
 class InputNode(EnvNode):
     def __init__(self, path, sample_input, context):
-        super().__init__(path)
+        EnvNode.__init__(self, path)
         self.sample_input = sample_input
         self.context = context
 
     def __call__(self):
+        if not os.path.exists(self.path):
+            os.mkdir(self.path)
         # create fault object
         toposrc = os.path.join(self.sample_input, 'topo_parameters.txt')
         faultsrc = os.path.join(self.sample_input, 'fault_parameters.txt')
@@ -57,12 +54,14 @@ class DataNode(EnvNode):
                 1: 'CanyonGrid'}
 
     def __init__(self, path, dim, lsteps, grid, context):
-        super().__init__(path)
+        EnvNode.__init__(self, path)
         self.lsteps = lsteps.split('|')
         self.context = context
         self.grid = getattr(gridstrategy, DataNode.gridtype[int(grid)])(dim.split('|')[0], dim.split('|')[1], self.context)
 
     def __call__(self):
+        if not os.path.exists(self.path):
+            os.mkdir(self.path)
         try:
             for i, h in enumerate([float(hstr) for hstr in self.lsteps]):
                 numpy.savetxt(os.path.join(self.path,'step{0}.txt'.format(i)), self.grid.makegrid(h), fmt='%d')
@@ -71,10 +70,12 @@ class DataNode(EnvNode):
 
 class SrcNode(EnvNode):
     def __init__(self, path, context):
-        super().__init__(path)
+        EnvNode.__init__(self, path)
         self.context = context
 
     def __call__(self):
+        if not os.path.exists(self.path):
+            os.mkdir(self.path)
         [runcmd('ln -s {0} {1}'.format(os.path.join(self.context.bindir, cmd), cmd), self.path) for cmd in
                ['Test', 'Pecube', 'Vtk']]
 
@@ -84,30 +85,17 @@ def setvals(src, dst):
         setattr(dst, k, v)
     return dst
 
-
-def genenv(s, context):
-    senv = SessionEnv(s['execution_directory'])
-    senv.attach(InputNode(os.path.join(s['execution_directory'], 'input'),
-                       os.path.join(s['sample'], 'input'), context))
-    senv.attach(SrcNode(os.path.join(s['execution_directory'], 'bin'), context))
-    senv.attach(DataNode(os.path.join(s['execution_directory'], 'data'), s['dim'], s['steps'],
-                         s['grid_type'], context))
-    senv.attach(EnvNode(os.path.join(s['execution_directory'], 'peout')))
-    senv.attach(EnvNode(os.path.join(s['execution_directory'], 'VTK')))
-    return senv()
-
-
 class PknEnv(PknGeneric):
     def __init__(self):
-        super().__init__(HabitatContext(), 'Environment')
+        PknGeneric.__init__(self, HabitatContext(), 'Environment')
 
     def generate(self, s, logger):
-        senv = SessionEnv(s['execution_directory'])
-        senv.attach(InputNode(os.path.join(s['execution_directory'], 'input'),
+        sesion_env = EnvNode(s['execution_directory'])
+        sesion_env.attach(InputNode(os.path.join(s['execution_directory'], 'input'),
                            os.path.join(s['sample'], 'input'), self.context))
-        senv.attach(SrcNode(os.path.join(s['execution_directory'], 'bin'), self.context))
-        senv.attach(DataNode(os.path.join(s['execution_directory'], 'data'), s['dim'], s['steps'],
+        sesion_env.attach(SrcNode(os.path.join(s['execution_directory'], 'bin'), self.context))
+        sesion_env.attach(DataNode(os.path.join(s['execution_directory'], 'data'), s['dim'], s['steps'],
                              s['grid_type'], self.context))
-        senv.attach(EnvNode(os.path.join(s['execution_directory'], 'peout')))
-        senv.attach(EnvNode(os.path.join(s['execution_directory'], 'VTK')))
-        return senv()
+        sesion_env.attach(EnvNode(os.path.join(s['execution_directory'], 'peout')))
+        sesion_env.attach(EnvNode(os.path.join(s['execution_directory'], 'VTK')))
+        return sesion_env()

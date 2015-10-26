@@ -16,7 +16,7 @@ class PropsProcessor:
 
 class AgeElevationProcessor(PropsProcessor):
     def __init__(self, metrica):
-        super().__init__(metrica)
+        PropsProcessor.__init__(metrica)
         self.columns = ['ExhumationRate', 'ApatiteHeAge', 'Points:2', 'arc_length']
 
     def __call__(self, path):
@@ -27,7 +27,7 @@ class AgeElevationProcessor(PropsProcessor):
 
 class TemperatureProcessor(PropsProcessor):
     def __init__(self, metrica):
-        super().__init__(metrica)
+        PropsProcessor.__init__(self, metrica)
         self.columns = ['velo:0', 'velo:1', 'velo:2', 'arc_length', 'Points:2']
 
     def __call__(self, path):

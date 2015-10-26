@@ -32,11 +32,11 @@ class ModelContext:
 
 class ConvertContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
 class DispContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
     @property
     def worklist(self):
@@ -46,7 +46,7 @@ class DispContext(ModelContext):
 
 class StatsContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
     def metrics(self):
         if 'metrics' not in self._context:
@@ -65,7 +65,7 @@ class StatsContext(ModelContext):
         
 class HabitatContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
     @property
     def data(self):
@@ -125,7 +125,7 @@ class HabitatContext(ModelContext):
 
 class NumerExeContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
     def _get_wrk_list(self, pec_model):
         data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=['execution_directory', '{0}'.format(pec_model)])

@@ -9,4 +9,4 @@ from pknstates.pkngeneric import PknGeneric
 
 class PknDisplay(PknGeneric):
     def __init__(self):
-        super().__init__(DispContext(), 'Display')
+        PknGeneric.__init__(self, DispContext(), 'Display')
