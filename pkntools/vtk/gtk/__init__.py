@@ -1,0 +1,1 @@
+/usr/share/pyshared/vtk/gtk/__init__.py
