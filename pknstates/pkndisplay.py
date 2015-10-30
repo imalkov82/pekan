@@ -10,3 +10,10 @@ from pknstates.pkngeneric import PknGeneric
 class PknDisplay(PknGeneric):
     def __init__(self):
         PknGeneric.__init__(self, DispContext(), 'Display')
+
+    def __repr__(self):
+        return 'PknDisplay class'
+
+    def generate(self, s, logger):
+        pass
+

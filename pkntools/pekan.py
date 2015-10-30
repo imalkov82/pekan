@@ -3,11 +3,14 @@ __author__ = 'imalkov'
 # from configparser import ConfigParser
 from argparse import ArgumentParser
 import ast
-import os
+import os, sys
 import logging
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from pkntools.mdlutils.mdlcontext import *
 import pknstates
+# from mdlutils.mdlcontext import *
 
 
 class PekanSM:
@@ -74,6 +77,9 @@ if __name__ == '__main__':
     parser.add_argument( "-l", dest="states_list", help="list of states to be executed: env, run, display, stat",
                          default='[]')
     # parser.add_argument( "-d", action="store_true", dest="debug", help="debug purpose", default= False)
+    # import sys
+    # for arg in sys.argv:
+    #     print arg
     kvargs = parser.parse_args()
     pkn = PekanSM()
     pkn.start([n.strip() for n in ast.literal_eval(kvargs.states_list)], kvargs.config_file)

@@ -11,7 +11,7 @@ class PknGeneric:
         pass
 
     def process(self, remaining_arr, pkn_sm):
-        pkn_sm.logger.info('process {0}'.format(type(self)))
+        pkn_sm.logger.info('process {0}'.format(repr(self)))
         self.context.update(pkn_sm.context)
         self.context.update(dict(pkn_sm.context.confkls[self.conftype]))
         self.context.data.apply(self.generate, args=(pkn_sm.logger, ), axis=1)

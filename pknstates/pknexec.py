@@ -31,12 +31,18 @@ class PknExec:
         p.join()
         return runcmd_out
 
+    def __repr__(self):
+        return 'PknExec class'
+
     def process(self, remaining_arr, pkn_sm):
+        pkn_sm.logger.info('process {0}'.format(repr(self)))
         self.numr_cnxt.update(pkn_sm.context)
         self.numr_cnxt.update(dict(pkn_sm.context.confkls['Execution']))
-        for res in [self.exec_mdl(getattr(self.numr_cnxt, str.lower(exec_name)), self.numr_cnxt.pool_size, exec_name,
-                                     self.numr_cnxt.timeout) for exec_name in ['Test', 'Pecube', 'Vtk']]:
-            pkn_sm.logger.info(res)
+        ress = [self.exec_mdl(getattr(self.numr_cnxt, str.lower(exec_name)), self.numr_cnxt.pool_size, exec_name,
+                                     self.numr_cnxt.timeout) for exec_name in ['Test', 'Pecube', 'Vtk']]
+        # for res in [self.exec_mdl(getattr(self.numr_cnxt, str.lower(exec_name)), self.numr_cnxt.pool_size, exec_name,
+        #                              self.numr_cnxt.timeout) for exec_name in ['Test', 'Pecube', 'Vtk']]:
+        #     pkn_sm.logger.info(res)
 
         try:
             pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
