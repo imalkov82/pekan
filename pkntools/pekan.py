@@ -27,7 +27,6 @@ class PekanSM:
     def process(self, remaining_list):
         remaining = self.state.process(remaining_list, self)
         if (remaining != []) and (self.state is not None):
-            self.logger.info('pekan_sm process')
             self.process(remaining)
         self.logger.info('pekan_sm finished')
 
