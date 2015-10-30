@@ -23,34 +23,3 @@ pekan.conf:
 2. need to be flexible for adding state
 3. work tight with pandas
 4. all stages need to have api for execution errors and logging information
---------------------------------------------
---------------------------------------------
-++ punch.py (PecUbe Habitat)
---------------------------------------------
-    state 1: model environment setup
---------------------------------------------
-1. pecube habitat contain next stages (can be executed async): (a) bin, (b) peout, (c) data, (d) VTK, (e) input
-    (a) files for model state (Test, Pecube, Vtk) can create softlink or compile src dir and copy the result
-    (b) create, clear or back up existing files (new flag)
-    (c) data will generate complex topographies (numpy) by giving geometry and topogrophy user wish to generate (flag)
-        complexTopo(s) will inherit from baseTopo class - need to be flexible
-    (d) create, clear or back up existing files (new flag)
-    (e) contain topo_params & fault_params, will generate files from base file
-        and will override base with topo_diff.conf/fault_diff.conf (or some other method ...)
-    (f) will load HabitatContext from pickle file that was saved by
---------------------------------------------
-++ punter.py (PecUbe Numerous ExecutoR) module:
---------------------------------------------
-    state 2: execution of model
---------------------------------------------
-1. work tight with pandas
-2. good logging with strong logging protocol
-
-
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-states only (no cmd execution of states)
-context of main state will be the Defaults context with logging configurations
-every other state will have his own context from it's conf file section
