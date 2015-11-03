@@ -12,8 +12,10 @@ class PknDisplay(PknGeneric):
         PknGeneric.__init__(self, DispContext(), 'Display')
 
     def __repr__(self):
-        return 'PknDisplay class'
+        return 'PknDisplay'
 
     def generate(self, s, logger):
+        #plot temperature (x) against depth (y) for all the geotherms
+        #plot Age (x) against elevation (y)
         pass
 

@@ -2,6 +2,9 @@ __author__ = 'imalkov'
 import re
 import os
 import pandas as pnd
+from pkntools.inputrules.faultrule import FaultInput
+from pkntools.inputrules.toporule import TopoInput
+
 
 class PropsProcessor:
     def __init__(self, metrica):
@@ -12,7 +15,7 @@ class PropsProcessor:
         self.mtrx_dict = {}
         r = re.compile('{0}\d.{1}'.format(self.metrica, self.extension))
         for root, dirs, files in os.listdir(path):
-            return sorted([os.path.join(root,x) for x in files if r.match(x)])
+            return sorted([os.path.join(root, x) for x in files if r.match(x)])
 
 class AgeElevationProcessor(PropsProcessor):
     def __init__(self, metrica):

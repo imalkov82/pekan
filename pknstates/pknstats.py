@@ -15,7 +15,7 @@ class PknStats(PknGeneric):
         self.grid_type = {0: 'PlatoStats', 1: 'CanyonStats'}
 
     def __repr__(self):
-        return 'PknStats class'
+        return 'PknStats'
 
     def generate(self, s, logger):
         grid = getattr(statstrategy, self.grid_type[int(s['grid_type'])])(self.context, logger)

@@ -9,7 +9,7 @@ class PknConvert(PknGeneric):
         PknGeneric.__init__(self, ConvertContext(), 'Convert')
 
     def __repr__(self):
-        return 'PknConvert class'
+        return 'PknConvert'
 
     def generate(self, s, logger):
         pass

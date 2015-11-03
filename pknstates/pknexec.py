@@ -32,7 +32,7 @@ class PknExec:
         return runcmd_out
 
     def __repr__(self):
-        return 'PknExec class'
+        return 'PknExec'
 
     def process(self, remaining_arr, pkn_sm):
         pkn_sm.logger.info('process {0}'.format(repr(self)))

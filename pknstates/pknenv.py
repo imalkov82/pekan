@@ -90,7 +90,7 @@ class PknEnv(PknGeneric):
         PknGeneric.__init__(self, HabitatContext(), 'Environment')
 
     def __repr__(self):
-        return 'PknEnv class'
+        return 'PknEnv'
 
     def generate(self, s, logger):
         sesion_env = EnvNode(s['execution_directory'])
