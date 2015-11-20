@@ -1,1 +1,0 @@
-/usr/share/pyshared/vtk/qt4/__init__.py

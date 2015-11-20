@@ -1,1 +1,0 @@
-/usr/share/pyshared/vtk/tk/vtkTkPhotoImage.py
