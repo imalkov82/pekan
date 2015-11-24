@@ -76,6 +76,10 @@ class SrcNode(EnvNode):
     def __call__(self):
         if not os.path.exists(self.path):
             os.mkdir(self.path)
+        else:
+            # print('cmd=rm {0}*, exec_dir={1}'.format(self.context.bindir, os.getcwd()))
+            runcmd('rm {0}/*'.format(self.path), self.path)
+        #execute
         [runcmd('ln -s {0} {1}'.format(os.path.join(self.context.bindir, cmd), cmd), self.path) for cmd in
                ['Test', 'Pecube', 'Vtk']]
 
