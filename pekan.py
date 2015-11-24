@@ -5,6 +5,8 @@ from argparse import ArgumentParser
 import ast
 import os, sys
 import logging
+
+
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
@@ -17,12 +19,12 @@ class PekanSM:
     def __init__(self):
         self.state = None
         self.context = ModelContext()
-        self.states_rank = {'env': 0, 'run': 1, 'convert': 2, 'stat': 3, 'display': 4}
-        self.states_obj = {'env': 'PknEnv',
-                           'run': 'PknExec',
-                           'convert': 'PknConvert',
-                           'stat': 'PknStats',
-                           'display': 'PknDisplay'}
+        # self.states_rank = {'env': 0, 'run': 1, 'convert': 2, 'stat': 3, 'display': 4}
+        # self.states_obj = {'env': 'PknEnv',
+        #                    'run': 'PknExec',
+        #                    'convert': 'PknConvert',
+        #                    'stat': 'PknStats',
+        #                    'display': 'PknDisplay'}
 
     def process(self, remaining_list):
         remaining = self.state.process(remaining_list, self)
@@ -47,7 +49,7 @@ class PekanSM:
         # log_name = os.path.join(home_dir,'pekan_{0}.log'.format(os.getpid()))
         # logging.basicConfig(filename=log_name,level=logging.DEBUG)
         # logging.basicConfig(filename=sys.stdout, level=logging.DEBUG)
-        logger = logging.getLogger('pekan')
+        logger = logging.getLogger('PEKAN')
         logger.setLevel(logging.DEBUG)
         # create file handler which logs even debug messages
         fh = logging.FileHandler(os.path.join(home_dir,'pekan_{0}.log'.format(os.getpid())))
@@ -65,20 +67,19 @@ class PekanSM:
         return logger
 
     def start(self, states_list, config_file):
-        self.state, sl = self._set_state(states_list)
+        # self.state, sl = self._set_state(states_list)
         self._set_configs(config_file)
+        states_obj = self.context.to_states(states_list)
+        self.state = getattr(pknstates, states_obj.pop(0))()
         self.logger = self._set_logger(self.context.homedir)
-        self.process(sl)
+        self.process(states_obj)
 
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("-a", dest="config_file", help="configuration file for exucution states")
     parser.add_argument( "-l", dest="states_list", help="list of states to be executed: env, run, display, stat",
                          default='[]')
-    # parser.add_argument( "-d", action="store_true", dest="debug", help="debug purpose", default= False)
-    # import sys
-    # for arg in sys.argv:
-    #     print arg
     kvargs = parser.parse_args()
     pkn = PekanSM()
+    print(kvargs.states_list)
     pkn.start([n.strip() for n in ast.literal_eval(kvargs.states_list)], kvargs.config_file)

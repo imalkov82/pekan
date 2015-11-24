@@ -43,6 +43,7 @@ class PknExec:
         # for res in res_alls:
         #     pkn_sm.logger.info(res)
         try:
-            pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
+            # pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
+            pkn_sm.state = getattr(pknstates, remaining_arr.pop(0))()
         except:
             pkn_sm.state = None

@@ -4,6 +4,7 @@ import os
 import ast
 import pandas as pnd
 from configparser import ConfigParser
+import xml.etree.ElementTree as etree
 
 class ModelContext:
     def __init__(self):
@@ -17,6 +18,24 @@ class ModelContext:
             self._context.update(context._context)
         else:
             raise ValueError('Update Fail: BAD CONTEXT')
+
+    def to_states(self, states_list):
+        pekan_xml = self._context['pekan_xml'].replace('~', os.environ['HOME'])
+        if not os.path.exists(pekan_xml):
+            raise IOError('missing config file')
+
+        res = []
+        root = etree.parse(pekan_xml).getroot()
+        for state in root.findall('state'):
+            if state.attrib['name'] not in states_list:
+                continue
+            res.append((state.find('class').text, int(state.find('rank').text)))
+        return [s for s, r in sorted(res, key=lambda s: s[1])]
+
+
+    @property
+    def class_props(self):
+        return
 
     @property
     def confkls(self):
