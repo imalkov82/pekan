@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 echo 'PEKAN START'
-python2.7 pkntools/pekan.py $@ 1>&2
+echo $@
+python2.7 main/pekan.py $@ 1>&2

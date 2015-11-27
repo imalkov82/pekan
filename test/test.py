@@ -37,17 +37,29 @@ def f(s, y):
     return s.max()
     # return s.max() - y
 
-from pkntools import vtk
+
 if __name__ == '__main__':
-    filename = '/home/imalkov/Dropbox/M.s/Research/DATA/TEST/test01/VTK/Pecube003.vtk'
-    reader = vtk.vtkUnstructuredGridReader()
-    reader.SetFileName(filename)
-    print("Reading volume dataset from " + filename + " ...")
-    reader.Update()  # executes the reader
-    output = reader.GetOutput()
-    scalar_range = output.GetScalarRange()
-    # ohoh = vtk.PlotOnIntersectionCurves( SliceType="Plane" )
-    print(scalar_range)
+    for i in globals().keys():
+        print(i)
+    #----------- XML --------------------------
+    # import xml.etree.ElementTree as etree
+    # e =  etree.parse('../conf/pekan.xml').getroot()
+    # for state in e.findall('state'):
+    #     print(state.attrib['name'])
+    #     print(state.find('rank').text)
+    #     print(state.find('class').text)
+
+    #----------- VKT ---------------------------
+    # from pkntools import vtk
+    # filename = '/home/imalkov/Dropbox/M.s/Research/DATA/TEST/test01/VTK/Pecube003.vtk'
+    # reader = vtk.vtkUnstructuredGridReader()
+    # reader.SetFileName(filename)
+    # print("Reading volume dataset from " + filename + " ...")
+    # reader.Update()  # executes the reader
+    # output = reader.GetOutput()
+    # scalar_range = output.GetScalarRange()
+    # # ohoh = vtk.PlotOnIntersectionCurves( SliceType="Plane" )
+    # print(scalar_range)
 
     # Lx=1345.
     # Ly=1428.
