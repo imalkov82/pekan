@@ -1,1 +1,0 @@
-/usr/share/pyshared/vtk/qt/__init__.py
