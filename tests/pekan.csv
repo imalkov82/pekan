@@ -1,0 +1,5 @@
+execution_directory,dim,grid_type,env,steps,sample,Test,Pecube,Vtk
+~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1J/,808|227,0,0,0|2000|5000,~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1A/,0,0,0
+~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1K/,808|227,1,0,0|2000|5000,~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1A/,0,0,0
+~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1L/,808|227,1,1,0|2000|5000,~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1A/,1,0,0
+~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1M/,808|227,1,1,0|2000|5000,~/DropboxUni2015/M.s/Research/DATA/SESSION_TREE/NODE02/Session1A/,1,0,0
