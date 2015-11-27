@@ -39,3 +39,8 @@ def session_naming(path, depth):
     names_list = str.rsplit(local_path, os.path.sep,depth)[-1 * depth:]
     name = '{0}{1}'.format(names_list[0].replace('NODE','n'), names_list[1].replace('Session', 's'))
     return name
+
+def setvals(src, dst):
+    for k, v in src.items():
+        setattr(dst, k, v)
+    return dst

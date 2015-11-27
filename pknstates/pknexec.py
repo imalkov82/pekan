@@ -35,6 +35,7 @@ class PknExec:
         return 'PknExec'
 
     def process(self, remaining_arr, pkn_sm):
+        #TODO: pre execution statistics
         pkn_sm.logger.info('process {0}'.format(repr(self)))
         self.numr_cnxt.update(pkn_sm.context)
         self.numr_cnxt.update(dict(pkn_sm.context.confkls['Execution']))
@@ -43,7 +44,6 @@ class PknExec:
         # for res in res_alls:
         #     pkn_sm.logger.info(res)
         try:
-            # pkn_sm.state = getattr(pknstates, pkn_sm.states_obj[remaining_arr.pop(0)])()
             pkn_sm.state = getattr(pknstates, remaining_arr.pop(0))()
         except:
             pkn_sm.state = None

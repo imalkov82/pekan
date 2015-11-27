@@ -17,6 +17,7 @@ class PknStats(PknGeneric):
     def __repr__(self):
         return 'PknStats'
 
-    def generate(self, s, logger):
-        grid = getattr(statstrategy, self.grid_type[int(s['grid_type'])])(self.context, logger)
-        grid.make_stats(os.path.join(s['execution_dir'], 'stats'))
+    # def generate(self, s, logger):
+    #     grid = getattr(statstrategy, self.grid_type[int(
+    #         s[self.context.csv_topo_2d_grid_type])])(self.context, logger)
+    #     grid.make_stats(os.path.join(s[self.context.csv_exec_dir], 'stats'))

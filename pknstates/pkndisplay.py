@@ -3,13 +3,13 @@ __author__ = 'imalkov'
 import os
 import sys
 sys.path.append(os.getcwd())
-from pkntools.mdlutils.mdlcontext import DispContext
+from pkntools.mdlutils.mdlcontext import DisplayContext
 from pknstates.pkngeneric import PknGeneric
 
 
 class PknDisplay(PknGeneric):
     def __init__(self):
-        PknGeneric.__init__(self, DispContext(), 'Display')
+        PknGeneric.__init__(self, DisplayContext(), 'Display')
 
     def __repr__(self):
         return 'PknDisplay'

@@ -39,12 +39,17 @@ def f(s, y):
 
 
 if __name__ == '__main__':
-    for i in globals().keys():
-        print(i)
+    # for i in globals().keys():
+    #     print(i)
     #----------- XML --------------------------
-    # import xml.etree.ElementTree as etree
-    # e =  etree.parse('../conf/pekan.xml').getroot()
-    # for state in e.findall('state'):
+    import xml.etree.ElementTree as etree
+    e =  etree.parse('../conf/pekan.xml').getroot()
+    states_map = e.find('csv')
+    for column in states_map.findall('A'):
+        print column.get('value')
+
+    # states_map = e.find('states_map')
+    # for state in states_map.findall('state'):
     #     print(state.attrib['name'])
     #     print(state.find('rank').text)
     #     print(state.find('class').text)

@@ -7,6 +7,7 @@ import sys
 import numpy
 sys.path.append(os.getcwd())
 from pkntools.mdlutils.mdlcontext import HabitatContext
+from pkntools.mdlutils.mdlrefine import setvals
 from pkntools.strategy import gridstrategy
 from pkntools.inputrules.faultrule import FaultInput
 from pkntools.inputrules.toporule import TopoInput
@@ -50,6 +51,7 @@ class InputNode(EnvNode):
 
 
 class DataNode(EnvNode):
+    #TODO: replace with metadata
     gridtype = {0: 'PlatoGrid',
                 1: 'CanyonGrid'}
 
@@ -81,13 +83,7 @@ class SrcNode(EnvNode):
             runcmd('rm {0}/*'.format(self.path), self.path)
         #execute
         [runcmd('ln -s {0} {1}'.format(os.path.join(self.context.bindir, cmd), cmd), self.path) for cmd in
-               ['Test', 'Pecube', 'Vtk']]
-
-
-def setvals(src, dst):
-    for k, v in src.items():
-        setattr(dst, k, v)
-    return dst
+               [self.context.csv_test_step, self.context.csv_pecube_step, self.context.csv_vtk_step]]
 
 class PknEnv(PknGeneric):
     def __init__(self):
@@ -97,12 +93,14 @@ class PknEnv(PknGeneric):
         return 'PknEnv'
 
     def generate(self, s, logger):
-        sesion_env = EnvNode(s['execution_directory'])
-        sesion_env.attach(InputNode(os.path.join(s['execution_directory'], 'input'),
-                           os.path.join(s['sample'], 'input'), self.context))
-        sesion_env.attach(SrcNode(os.path.join(s['execution_directory'], 'bin'), self.context))
-        sesion_env.attach(DataNode(os.path.join(s['execution_directory'], 'data'), s['dim'], s['steps'],
-                             s['grid_type'], self.context))
-        sesion_env.attach(EnvNode(os.path.join(s['execution_directory'], 'peout')))
-        sesion_env.attach(EnvNode(os.path.join(s['execution_directory'], 'VTK')))
+        sesion_env = EnvNode(s[self.context.csv_exec_dir])
+        sesion_env.attach(InputNode(os.path.join(s[self.context.csv_exec_dir], 'input'),
+                           os.path.join(s[self.context.csv_ref_dir], 'input'), self.context))
+        sesion_env.attach(SrcNode(os.path.join(s[self.context.csv_exec_dir], 'bin'), self.context))
+        sesion_env.attach(DataNode(os.path.join(s[self.context.csv_exec_dir], 'data'),
+                                   s[self.context.csv_topo_2d_grid_dimentions],
+                                   s[self.context.csv_topo_2d_max_hights],
+                                   s[self.context.csv_topo_2d_grid_type], self.context))
+        sesion_env.attach(EnvNode(os.path.join(s[self.context.csv_exec_dir], 'peout')))
+        sesion_env.attach(EnvNode(os.path.join(s[self.context.csv_exec_dir], 'VTK')))
         return sesion_env()
