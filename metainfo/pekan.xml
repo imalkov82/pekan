@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pekan>
+    <states_map>
+        <state name = "env">
+            <class>PknEnv</class>
+            <rank>0</rank>
+        </state>
+        <state name = "run">
+            <class>PknExec</class>
+            <rank>1</rank>
+        </state>
+        <state name = "convert">
+            <class>PknConvert</class>
+            <rank>2</rank>
+        </state>
+        <state name = "stat">
+            <class>PknStats</class>
+            <rank>3</rank>
+        </state>
+        <state name = "display">
+            <class>PknDisplay</class>
+            <rank>4</rank>
+        </state>
+    </states_map>
+    <csv>
+        <column name = "A" value = "execution_directory"/>
+        <column name = "B" value = "dim"/>
+        <column name = "C" value = "grid_type"/>
+        <column name = "D" value = "env"/>
+        <column name = "E" value = "steps"/>
+        <column name = "F" value = "sample"/>
+        <column name = "G" value = "Test"/>
+        <column name = "H" value = "Pecube"/>
+        <column name = "I" value = "Vtk"/>
+    </csv>
+</pekan>
