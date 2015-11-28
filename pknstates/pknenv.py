@@ -12,7 +12,7 @@ from pkntools.strategy import gridstrategy
 from pkntools.inputrules.faultrule import FaultInput
 from pkntools.inputrules.toporule import TopoInput
 from pkntools.mdlutils.mdlrefine import runcmd
-from pknstates.pkngeneric import PknGeneric
+from .pkngeneric import PknGeneric
 
 class EnvNode:
     def __init__(self, path):

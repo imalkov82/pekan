@@ -1,7 +1,7 @@
 __author__ = 'imalkov'
 
 from pkntools.mdlutils.mdlcontext import ConvertContext
-from pknstates.pkngeneric import PknGeneric
+from .pkngeneric import PknGeneric
 
 
 class PknConvert(PknGeneric):

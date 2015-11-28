@@ -1,12 +1,7 @@
 __author__ = 'imalkov'
 
 import os
-import sys
-
-sys.path.append(os.getcwd())
-from pkntools.mdlutils.mdlrefine import prepare_to_parse
-
-
+from ..mdlutils.mdlrefine import prepare_to_parse
 
 def eval_prop(f):
     """ DECORATOR: STRIP STR """

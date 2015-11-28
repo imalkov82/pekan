@@ -66,5 +66,4 @@ if __name__ == '__main__':
                          default='[]')
     kvargs = parser.parse_args()
     pkn = PekanSM()
-    print(kvargs.states_list)
     pkn.start([n.strip() for n in ast.literal_eval(kvargs.states_list)], kvargs.config_file)

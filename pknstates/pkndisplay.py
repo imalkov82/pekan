@@ -4,7 +4,7 @@ import os
 import sys
 sys.path.append(os.getcwd())
 from pkntools.mdlutils.mdlcontext import DisplayContext
-from pknstates.pkngeneric import PknGeneric
+from .pkngeneric import PknGeneric
 
 
 class PknDisplay(PknGeneric):

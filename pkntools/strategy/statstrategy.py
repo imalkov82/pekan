@@ -2,8 +2,8 @@ __author__ = 'imalkov'
 import re
 import os
 import pandas as pnd
-from pkntools.inputrules.faultrule import FaultInput
-from pkntools.inputrules.toporule import TopoInput
+from ..inputrules.faultrule import FaultInput
+from ..inputrules.toporule import TopoInput
 
 
 class PropsProcessor:
