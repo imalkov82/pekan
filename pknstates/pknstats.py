@@ -12,6 +12,7 @@ from pknstates.pkngeneric import PknGeneric
 class PknStats(PknGeneric):
     def __init__(self):
         PknGeneric.__init__(self, StatsContext(), 'Statistics')
+        #TODO: replace hardcode sting
         self.grid_type = {0: 'PlatoStats', 1: 'CanyonStats'}
 
     def __repr__(self):

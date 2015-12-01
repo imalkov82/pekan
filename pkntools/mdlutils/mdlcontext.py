@@ -4,13 +4,35 @@ import os
 import ast
 import pandas as pnd
 from configparser import ConfigParser
-import xml.etree.ElementTree as etree
+from .mdlmetainfo import *
+
+
+class SessionInput:
+    def __init__(self, fault_name, topo_name):
+        self.topo_name = topo_name
+        self.fault_name = fault_name
+
+    @property
+    def fault(self):
+        return self.fault_name
+    @property
+    def topo(self):
+        return self.topo_name
+
+class Session:
+    def __init__(self):
+        self.input = SessionInput()
+
+    @property
+    def input(self):
+        return self.input
+
 
 class ModelContext:
     def __init__(self):
         self._context = {}
         self._confobj = None
-        self.root = None
+        self.xmlroot = None
 
     def update(self, context):
         if isinstance(context, dict):
@@ -20,60 +42,22 @@ class ModelContext:
         else:
             raise ValueError('Update Fail: BAD CONTEXT')
 
-    def xml_root(self):
-        if self.root != None:
-            return self.root
-        pekan_xml = self._context['pekan_xml'].replace('~', os.environ['HOME'])
-        if not os.path.exists(pekan_xml):
-            raise IOError('missing config file')
-        root = etree.parse(pekan_xml).getroot()
-        self.root = root
-        return root
+    @property
+    def csv(self):
+        return MetaCsv(self._context['pekan_xml'].replace('~', os.environ['HOME']))
 
-    def col_name(self, name):
-        root = self.xml_root()
-        states_map = root.find('csv')
-        for column in states_map.findall('column'):
-            if column.attrib['name'] == name:
-                return column.get('value')
+    @property
+    def states(self):
+        return MetaStateMachine(self._context['pekan_xml'].replace('~', os.environ['HOME']))
 
-    def to_states(self, states_list):
-        root = self.xml_root()
-        res = []
-        states_map = root.find('states_map')
-        for state in states_map.findall('state'):
-            if state.attrib['name'] not in states_list:
-                continue
-            res.append((state.find('class').text, int(state.find('rank').text)))
-        return [s for s, r in sorted(res, key=lambda s: s[1])]
-    #cs file metadata
     @property
-    def csv_exec_dir(self):
-        return self.col_name('A')
+    def pecinput(self):
+        return MetaEnvInput(self._context['pekan_xml'].replace('~', os.environ['HOME']))
+
     @property
-    def csv_topo_2d_grid_dimentions(self):
-        return self.col_name('B')
-    @property
-    def csv_topo_2d_grid_type(self):
-        return self.col_name('C')
-    @property
-    def csv_create_env(self):
-        return self.col_name('D')
-    @property
-    def csv_topo_2d_max_hights(self):
-        return self.col_name('E')
-    @property
-    def csv_ref_dir(self):
-        return self.col_name('F')
-    @property
-    def csv_test_step(self):
-        return self.col_name('G')
-    @property
-    def csv_pecube_step(self):
-        return self.col_name('H')
-    @property
-    def csv_vtk_step(self):
-        return self.col_name('I')
+    def envinput(self):
+        return MetaInputGrid(self._context['pekan_xml'].replace('~', os.environ['HOME']))
+    #------------------------------------
     #------------------------------------
     @property
     def class_props(self):
@@ -111,13 +95,13 @@ class HabitatContext(ModelContext):
     def data(self):
         try:
             data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0,
-                                usecols=[self.csv_exec_dir, self.csv_topo_2d_grid_dimentions,
-                                         self.csv_topo_2d_grid_type, self.csv_create_env, self.csv_topo_2d_max_hights,
-                                         self.csv_ref_dir])
-            tmp_data = data[data[self.csv_create_env] == 1]
-            tmp_data[self.csv_exec_dir] = tmp_data[self.csv_exec_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
-            tmp_data[self.csv_ref_dir] = tmp_data[self.csv_ref_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
-            return tmp_data.drop(self.csv_create_env, axis=1)
+                                usecols=[self.csv.exec_dir, self.csv.topo_2d_grid_dimentions,
+                                         self.csv.topo_2d_grid_type, self.csv.create_env, self.csv.topo_2d_max_hights,
+                                         self.csv.ref_dir])
+            tmp_data = data[data[self.csv.create_env] == 1]
+            tmp_data[self.csv.exec_dir] = tmp_data[self.csv.exec_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
+            tmp_data[self.csv.ref_dir] = tmp_data[self.csv.ref_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
+            return tmp_data.drop(self.csv.create_env, axis=1)
         except Exception as e:
             print(e.args)
             return None
@@ -170,10 +154,10 @@ class NumerExeContext(ModelContext):
         ModelContext.__init__(self)
 
     def _get_wrk_list(self, pec_model):
-        data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=[self.csv_exec_dir, '{0}'.format(pec_model)])
+        data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=[self.csv.exec_dir, '{0}'.format(pec_model)])
         work_data = data[data[pec_model] == 1]
-        work_data[self.csv_exec_dir] = work_data[self.csv_exec_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
-        return [p for i, p in work_data[self.csv_exec_dir].iteritems()]
+        work_data[self.csv.exec_dir] = work_data[self.csv.exec_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
+        return [p for i, p in work_data[self.csv.exec_dir].iteritems()]
 
     @property
     def depth(self):
@@ -185,15 +169,15 @@ class NumerExeContext(ModelContext):
 
     @property
     def vtk(self):
-        return self._get_wrk_list(self.csv_vtk_step)
+        return self._get_wrk_list(self.csv.vtk_step)
 
     @property
     def pecube(self):
-        return self._get_wrk_list(self.csv_pecube_step)
+        return self._get_wrk_list(self.csv.pecube_step)
 
     @property
     def test(self):
-        return self._get_wrk_list(self.csv_test_step)
+        return self._get_wrk_list(self.csv.test_step)
 
     @property
     def pool_size(self):

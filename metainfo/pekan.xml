@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pekan>
-    <states_map>
+    <statemachine name = 'pekan'>
         <state name = "env">
             <class>PknEnv</class>
             <rank>0</rank>
@@ -21,8 +21,18 @@
             <class>PknDisplay</class>
             <rank>4</rank>
         </state>
-    </states_map>
-    <csv>
+    </statemachine>
+    <statemachine name="env">
+        <state name="input_grid">
+            <class>PlatoGrid</class>
+            <rank>0</rank>
+        </state>
+        <state name="input_grid">
+            <class>CanyonGrid</class>
+            <rank>1</rank>
+        </state>
+    </statemachine>
+    <input name = 'csv'>
         <column name = "A" value = "execution_directory"/>
         <column name = "B" value = "dim"/>
         <column name = "C" value = "grid_type"/>
@@ -32,5 +42,44 @@
         <column name = "G" value = "Test"/>
         <column name = "H" value = "Pecube"/>
         <column name = "I" value = "Vtk"/>
-    </csv>
+    </input>
+    <input name="input">
+        <file name = "topography" value = "topo_parameters.txt" />
+        <file name = "fault" value="fault_parameters.txt"/>
+    </input>
+    <!--session>
+        <folder type = "input">
+            <name>bin</name>
+            <file name="Vtk">
+                <name>Vtk</name>
+                <type>bin</type>
+            </file>
+            <file name="Pecube">
+                <name>Pecube</name>
+                <type>bin</type>
+            </file>
+            <file name="Test">
+                <name>Test</name>
+                <type>bin</type>
+            </file>
+        </folder>
+        <folder name="data">
+            <file name="grid">
+                <name>step</name>
+                <type>txt</type>
+            </file>
+        </folder>
+        <folder name="input">
+            <file name = "topo">
+                <name>topo_parameters</name>
+                <type>txt</type>
+            </file>
+            <file name="fault">
+                <name>fault_parameters</name>
+                <type>txt</type>
+            </file>
+        </folder>
+        <folder name="peout"/>
+        <folder name="VTK"/>
+    </session -->
 </pekan>

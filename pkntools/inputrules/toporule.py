@@ -19,7 +19,7 @@ def eval_prop(f):
 
 class TopoInput:
     def __init__(self, fpath):
-        if os.path.isfile(fpath) and os.path.split(fpath)[1] == 'topo_parameters.txt':
+        if os.path.isfile(fpath):
             str_file = prepare_to_parse(fpath)
             pivot = 9 + int(str_file[6])
             self._const_part = str_file[:pivot]

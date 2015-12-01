@@ -20,6 +20,7 @@ class PropsProcessor:
 class AgeElevationProcessor(PropsProcessor):
     def __init__(self, metrica):
         PropsProcessor.__init__(metrica)
+        #TODO: replace hardcoded string
         self.columns = ['ExhumationRate', 'ApatiteHeAge', 'Points:2', 'arc_length']
 
     def __call__(self, path):
@@ -31,6 +32,7 @@ class AgeElevationProcessor(PropsProcessor):
 class TemperatureProcessor(PropsProcessor):
     def __init__(self, metrica):
         PropsProcessor.__init__(self, metrica)
+        #TODO: replace hardcoded string
         self.columns = ['velo:0', 'velo:1', 'velo:2', 'arc_length', 'Points:2']
 
     def __call__(self, path):
@@ -56,6 +58,7 @@ class EscarpmentStats:
     def __init__(self, context, logger):
         self.context = context
         self.logger = logger
+        #TODO: replace hardcoded string
         self.types = {'Age-Elevation': 'AgeElevationProcessor', 'Temperature': 'TemperatureProcessor'}
 
     def make_stats(self, path):

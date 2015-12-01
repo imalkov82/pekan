@@ -53,7 +53,8 @@ class PekanSM:
 
     def start(self, states_list, config_file):
         self._set_configs(config_file)
-        states_obj = self.context.to_states(states_list)
+        states_obj = self.context.states.convert(states_list)
+        # states_obj = self.context.to_states(states_list)
         self.state = getattr(pknstates, states_obj.pop(0))()
         self.logger = self._set_logger(self.context.homedir)
         self.process(states_obj)
