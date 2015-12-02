@@ -47,39 +47,4 @@
         <file name = "topography" value = "topo_parameters.txt" />
         <file name = "fault" value="fault_parameters.txt"/>
     </input>
-    <!--session>
-        <folder type = "input">
-            <name>bin</name>
-            <file name="Vtk">
-                <name>Vtk</name>
-                <type>bin</type>
-            </file>
-            <file name="Pecube">
-                <name>Pecube</name>
-                <type>bin</type>
-            </file>
-            <file name="Test">
-                <name>Test</name>
-                <type>bin</type>
-            </file>
-        </folder>
-        <folder name="data">
-            <file name="grid">
-                <name>step</name>
-                <type>txt</type>
-            </file>
-        </folder>
-        <folder name="input">
-            <file name = "topo">
-                <name>topo_parameters</name>
-                <type>txt</type>
-            </file>
-            <file name="fault">
-                <name>fault_parameters</name>
-                <type>txt</type>
-            </file>
-        </folder>
-        <folder name="peout"/>
-        <folder name="VTK"/>
-    </session -->
 </pekan>
