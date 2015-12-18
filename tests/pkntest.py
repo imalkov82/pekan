@@ -1,3 +1,5 @@
+from duplicity.pexpect import searcher_re
+
 __author__ = 'imalkov'
 
 import unittest
@@ -10,9 +12,7 @@ class SMTestCase(unittest.TestCase):
         machine = PekanSM()
         self.assertEqual(machine.state, None)
         self.assertEqual(isinstance(machine.context, ModelContext), True)
-
-
-
+        self.assertEquals()
 
 if __name__ == '__main__':
     unittest.main()

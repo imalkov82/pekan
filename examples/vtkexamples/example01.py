@@ -4,7 +4,9 @@ Created on Thu Feb 12 14:53:20 2015
 """
 
 # Import vtk package to access VTK classes/functions.
-from pkntools import vtk
+import pyvtk
+import vtk
+import paraview
 
 #==============================================================================
 # 1. Iron Protein dataset
