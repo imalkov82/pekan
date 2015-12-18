@@ -1,56 +1,12 @@
 Pecube Execute Analyse preseNt - PEcAN
+------------------------------------------
 
-pekan.conf:
-1. will contain all categories related to the state machine (execution, convert, analyze/statistics, display)
-2. will generate proper pickle file for every state using pekan.conf
-3. habitat state will use peconf.csv file for execution and will write all the success and fail of env creation to the log
-   than, punter file will execute the peconf.csv file
---------------------------------------------
---------------------------------------------
-++ pekan.py
---------------------------------------------
-    state machine of application
---------------------------------------------
-0. contains state machine, logging mechanism, use as Facade pattern for eggs/modules of state machine
-1. contains state machine with next states:
-    d. pre-execution state (create execution environment)
-    c. execution state
-    c. convert execution state output to common protocol
-    e. analyze/statistics state
-    f. display state
-    a. error state
+Pecan application stands for execution and analysis tool of Pecube (model that was writen by Jean Brawn).
+the application need to be configured with pecan.conf & pecan.csv files
 
-2. need to be flexible for adding state
-3. work tight with pandas
-4. all stages need to have api for execution errors and logging information
---------------------------------------------
---------------------------------------------
-++ punch.py (PecUbe Habitat)
---------------------------------------------
-    state 1: model environment setup
---------------------------------------------
-1. pecube habitat contain next stages (can be executed async): (a) bin, (b) peout, (c) data, (d) VTK, (e) input
-    (a) files for model state (Test, Pecube, Vtk) can create softlink or compile src dir and copy the result
-    (b) create, clear or back up existing files (new flag)
-    (c) data will generate complex topographies (numpy) by giving geometry and topogrophy user wish to generate (flag)
-        complexTopo(s) will inherit from baseTopo class - need to be flexible
-    (d) create, clear or back up existing files (new flag)
-    (e) contain topo_params & fault_params, will generate files from base file
-        and will override base with topo_diff.conf/fault_diff.conf (or some other method ...)
-    (f) will load HabitatContext from pickle file that was saved by
---------------------------------------------
-++ punter.py (PecUbe Numerous ExecutoR) module:
---------------------------------------------
-    state 2: execution of model
---------------------------------------------
-1. work tight with pandas
-2. good logging with strong logging protocol
+about pecan.conf:
+
+about pecan.csv:
 
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-states only (no cmd execution of states)
-context of main state will be the Defaults context with logging configurations
-every other state will have his own context from it's conf file section
+

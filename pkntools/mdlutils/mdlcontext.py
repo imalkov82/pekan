@@ -4,11 +4,35 @@ import os
 import ast
 import pandas as pnd
 from configparser import ConfigParser
+from .mdlmetainfo import *
+
+
+class SessionInput:
+    def __init__(self, fault_name, topo_name):
+        self.topo_name = topo_name
+        self.fault_name = fault_name
+
+    @property
+    def fault(self):
+        return self.fault_name
+    @property
+    def topo(self):
+        return self.topo_name
+
+class Session:
+    def __init__(self):
+        self.input = SessionInput()
+
+    @property
+    def input(self):
+        return self.input
+
 
 class ModelContext:
     def __init__(self):
         self._context = {}
         self._confobj = None
+        self.xmlroot = None
 
     def update(self, context):
         if isinstance(context, dict):
@@ -17,6 +41,27 @@ class ModelContext:
             self._context.update(context._context)
         else:
             raise ValueError('Update Fail: BAD CONTEXT')
+
+    @property
+    def csv(self):
+        return MetaCsv(self._context['pekan_xml'].replace('~', os.environ['HOME']))
+
+    @property
+    def states(self):
+        return MetaStateMachine(self._context['pekan_xml'].replace('~', os.environ['HOME']))
+
+    @property
+    def pecinput(self):
+        return MetaEnvInput(self._context['pekan_xml'].replace('~', os.environ['HOME']))
+
+    @property
+    def envinput(self):
+        return MetaInputGrid(self._context['pekan_xml'].replace('~', os.environ['HOME']))
+    #------------------------------------
+    #------------------------------------
+    @property
+    def class_props(self):
+        return
 
     @property
     def confkls(self):
@@ -32,50 +77,31 @@ class ModelContext:
 
 class ConvertContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
-class DispContext(ModelContext):
+class DisplayContext(ModelContext):
     def __init__(self):
-        super().__init__()
-
-    @property
-    def worklist(self):
-        work_data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=['execution_directory'])
-        work_data['execution_directory'] = work_data['execution_directory'].apply(lambda x: x.replace('~', os.environ['HOME']))
-        return [p for i, p in work_data['execution_directory'].iteritems()]
+        ModelContext.__init__(self)
 
 class StatsContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
-    def metrics(self):
-        if 'metrics' not in self._context:
-            raise ValueError('metrics not in configuration')
-        res = {}
-        for k,v in ast.literal_eval(self._context['metrics']).items():
-            res[k] = ast.literal_eval(v)
-        return res
-
-    @property
-    def data(self):
-        data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=['execution_directory', 'grid_type', 'stat'])
-        work_data = data[data['stat'] == 1]
-        work_data['execution_directory'] = work_data['execution_directory'].apply(lambda x: x.replace('~', os.environ['HOME']))
-        return work_data.drop('env', axis=1)
-        
 class HabitatContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
     @property
     def data(self):
         try:
             data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0,
-                                usecols=['execution_directory', 'dim', 'grid_type', 'env', 'steps', 'sample'])
-            tmp_data = data[data['env'] == 1]
-            tmp_data['execution_directory'] = tmp_data['execution_directory'].apply(lambda x: x.replace('~', os.environ['HOME']))
-            tmp_data['sample'] = tmp_data['sample'].apply(lambda x: x.replace('~', os.environ['HOME']))
-            return tmp_data.drop('env', axis=1)
+                                usecols=[self.csv.exec_dir, self.csv.topo_2d_grid_dimentions,
+                                         self.csv.topo_2d_grid_type, self.csv.create_env, self.csv.topo_2d_max_hights,
+                                         self.csv.ref_dir])
+            tmp_data = data[data[self.csv.create_env] == 1]
+            tmp_data[self.csv.exec_dir] = tmp_data[self.csv.exec_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
+            tmp_data[self.csv.ref_dir] = tmp_data[self.csv.ref_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
+            return tmp_data.drop(self.csv.create_env, axis=1)
         except Exception as e:
             print(e.args)
             return None
@@ -125,13 +151,13 @@ class HabitatContext(ModelContext):
 
 class NumerExeContext(ModelContext):
     def __init__(self):
-        super().__init__()
+        ModelContext.__init__(self)
 
     def _get_wrk_list(self, pec_model):
-        data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=['execution_directory', '{0}'.format(pec_model)])
+        data = pnd.read_csv(self._context['peconfig'].replace('~', os.environ['HOME']), header=0, usecols=[self.csv.exec_dir, '{0}'.format(pec_model)])
         work_data = data[data[pec_model] == 1]
-        work_data['execution_directory'] = work_data['execution_directory'].apply(lambda x: x.replace('~', os.environ['HOME']))
-        return [p for i, p in work_data['execution_directory'].iteritems()]
+        work_data[self.csv.exec_dir] = work_data[self.csv.exec_dir].apply(lambda x: x.replace('~', os.environ['HOME']))
+        return [p for i, p in work_data[self.csv.exec_dir].iteritems()]
 
     @property
     def depth(self):
@@ -143,15 +169,15 @@ class NumerExeContext(ModelContext):
 
     @property
     def vtk(self):
-        return self._get_wrk_list('Vtk')
+        return self._get_wrk_list(self.csv.vtk_step)
 
     @property
     def pecube(self):
-        return self._get_wrk_list('Pecube')
+        return self._get_wrk_list(self.csv.pecube_step)
 
     @property
     def test(self):
-        return self._get_wrk_list('Test')
+        return self._get_wrk_list(self.csv.test_step)
 
     @property
     def pool_size(self):
