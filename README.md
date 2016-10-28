@@ -1,1 +1,1 @@
-# Pekan project
+# PEcAN - Pecube Execute Analyse preseNt
